@@ -101,7 +101,6 @@
                 }),
             };
 
-            Console.WriteLine(graphArray);
             Dijkstra D = new();
             D.Run(graphArray, 0);
             D.PrintResults();
