@@ -1,6 +1,3 @@
-from typing import BinaryIO
-
-
 class HeapUtilities:
 
     @staticmethod
