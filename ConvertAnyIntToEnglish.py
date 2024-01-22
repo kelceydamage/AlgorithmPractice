@@ -56,12 +56,12 @@ class Solution:
 
     def Run(integertoSolve):
         print(f'Integer to convert: {integertoSolve}')
-        Solution.OrderByLeastSignifiacantDigit(integertoSolve)
+        Solution.OrderByLeastSignificantDigit(integertoSolve)
         Solution.RendderToText()
         Solution.PrintSolution()
 
     @staticmethod
-    def OrderByLeastSignifiacantDigit(integertoSolve):
+    def OrderByLeastSignificantDigit(integertoSolve):
         [Solution.stack.put(i) for i in str(integertoSolve)]
 
     @staticmethod
@@ -98,12 +98,6 @@ class Solution:
             counter += 3
             if (counter % Solution.languageSegments == 0 and Solution.stack.qsize() > 0):
                 Solution.resultStack.put(Solution.segmentmap[counter])
-                
-
-
-            
-
-
 
 
 if __name__ == "__main__":
