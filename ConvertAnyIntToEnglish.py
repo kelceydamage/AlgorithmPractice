@@ -35,8 +35,8 @@ WordMap = {
 
 
 class Solution:
-    languageSegments = 3
-    segmentmap = {
+    englishLanguageSegments = 3
+    englishSegmentmap = {
         0: '',
         3: 'thousand',
         6: 'million',
@@ -51,7 +51,7 @@ class Solution:
         33: 'decillion',
     }
     stack = queue.LifoQueue()
-    wordmap = WordMap
+    englishWordmap = WordMap
     resultStack = queue.LifoQueue()
 
     def Run(integertoSolve):
@@ -62,10 +62,13 @@ class Solution:
 
     @staticmethod
     def OrderByLeastSignificantDigit(integertoSolve):
+        """Build a stack of the digits from left to right in order to use them 
+        right to left."""
         [Solution.stack.put(i) for i in str(integertoSolve)]
 
     @staticmethod
     def PrintSolution():
+        """Print the result stack to get the solution in correct order."""
         print('Conversion to string:')
         while Solution.resultStack.qsize() > 0:
             print(Solution.resultStack.get(), end=' ')
@@ -73,33 +76,50 @@ class Solution:
 
     @staticmethod
     def RendderToText():
+        """Drain the stack while running a segment solver on each iteration.
+        Inject inter-segmental words into the result stack."""
         counter = 0
         while Solution.stack.qsize() > 0:
-            for i in range(0, Solution.languageSegments - 1):
-                if (Solution.stack.qsize() == 0): break
-                if (i == 0):
-                    nextSignificant = '0'
-                    leastSignificant = Solution.stack.get()
-                    if (Solution.stack.qsize() > 0): 
-                        nextSignificant = Solution.stack.get()
-                    if (nextSignificant == '1'):
-                        key = int(nextSignificant + leastSignificant)
-                        Solution.resultStack.put(Solution.wordmap[int(key)])
-                    elif (leastSignificant != '0'):
-                        Solution.resultStack.put(Solution.wordmap[int(leastSignificant)])
-                        if (nextSignificant != '0'):
-                            Solution.resultStack.put('-')
-                            Solution.resultStack.put(f'{Solution.wordmap[int(nextSignificant) * 10]}')
-                else:
-                    mostSignificant = Solution.stack.get()
-                    if (mostSignificant != '0'):
-                        Solution.resultStack.put(Solution.wordmap[100])
-                        Solution.resultStack.put(Solution.wordmap[int(mostSignificant)])
-            counter += 3
-            if (counter % Solution.languageSegments == 0 and Solution.stack.qsize() > 0):
-                Solution.resultStack.put(Solution.segmentmap[counter])
+            print(f'queue size: {Solution.stack.qsize()}')
+            solvedSegmentLength = Solution.EnglishSolverForSegments()
+            print(f'solved segment length: {solvedSegmentLength}')
+            counter += solvedSegmentLength
+            if (counter % Solution.englishLanguageSegments == 0 and Solution.stack.qsize() > 0):
+                Solution.resultStack.put(Solution.englishSegmentmap[counter])
+
+    @staticmethod
+    def EnglishSolverForSegments():
+        """Take up to 3 digits off the stack and contextually convert them to
+        English words. Push them onto the result stack in reverese order."""
+        solvedSegmentLength = 0
+        for i in range(0, 2):
+            if (Solution.stack.qsize() == 0): break
+            if (i == 0):
+                solvedSegmentLength = 1
+                nextSignificant = '0'
+                leastSignificant = Solution.stack.get()
+                if (Solution.stack.qsize() > 0): 
+                    nextSignificant = Solution.stack.get()
+                print('nextSignificant: ' + nextSignificant)
+                if (nextSignificant == '1'):
+                    key = int(nextSignificant + leastSignificant)
+                    Solution.resultStack.put(Solution.englishWordmap[int(key)])
+                if (leastSignificant != '0'):
+                    Solution.resultStack.put(Solution.englishWordmap[int(leastSignificant)])
+                if (int(nextSignificant) > 1):
+                    if (leastSignificant != '0'):
+                        Solution.resultStack.put('-')
+                    Solution.resultStack.put(f'{Solution.englishWordmap[int(nextSignificant) * 10]}')
+            else:
+                mostSignificant = Solution.stack.get()
+                if (mostSignificant != '0'):
+                    Solution.resultStack.put(Solution.englishWordmap[100])
+                    Solution.resultStack.put(Solution.englishWordmap[int(mostSignificant)])
+                solvedSegmentLength = 3
+        return solvedSegmentLength
 
 
 if __name__ == "__main__":
     print('Running solution...')
     Solution.Run(random.randint(0, 999999999999999999999))
+    #Solution.Run(70316726957092492757)
