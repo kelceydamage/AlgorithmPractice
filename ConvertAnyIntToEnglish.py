@@ -80,9 +80,7 @@ class Solution:
         Inject inter-segmental words into the result stack."""
         counter = 0
         while Solution.stack.qsize() > 0:
-            print(f'queue size: {Solution.stack.qsize()}')
             solvedSegmentLength = Solution.EnglishSolverForSegments()
-            print(f'solved segment length: {solvedSegmentLength}')
             counter += solvedSegmentLength
             if (counter % Solution.englishLanguageSegments == 0 and Solution.stack.qsize() > 0):
                 Solution.resultStack.put(Solution.englishSegmentmap[counter])
@@ -91,19 +89,18 @@ class Solution:
     def EnglishSolverForSegments():
         """Take up to 3 digits off the stack and contextually convert them to
         English words. Push them onto the result stack in reverese order."""
-        solvedSegmentLength = 0
+        solvedSegmentLength = 1
         for i in range(0, 2):
             if (Solution.stack.qsize() == 0): break
             if (i == 0):
-                solvedSegmentLength = 1
-                nextSignificant = '0'
                 leastSignificant = Solution.stack.get()
+                nextSignificant = '0'
                 if (Solution.stack.qsize() > 0): 
                     nextSignificant = Solution.stack.get()
-                print('nextSignificant: ' + nextSignificant)
                 if (nextSignificant == '1'):
                     key = int(nextSignificant + leastSignificant)
                     Solution.resultStack.put(Solution.englishWordmap[int(key)])
+                    continue
                 if (leastSignificant != '0'):
                     Solution.resultStack.put(Solution.englishWordmap[int(leastSignificant)])
                 if (int(nextSignificant) > 1):
